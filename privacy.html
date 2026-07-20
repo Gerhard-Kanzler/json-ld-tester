@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — JSON-LD &amp; Agent Inspector</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 2.5rem 1.25rem 4rem;
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1a1a1a; background: #fff; -webkit-text-size-adjust: 100%;
+  }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 1.9rem; line-height: 1.2; margin: 0 0 .35rem; }
+  h2 { font-size: 1.2rem; margin: 2rem 0 .5rem; }
+  .meta { color: #666; font-size: .9rem; margin: 0 0 2rem; }
+  p, li { color: #262626; }
+  ul { padding-left: 1.25rem; }
+  li { margin: .3rem 0; }
+  code { background: #f2f2f2; padding: .1rem .35rem; border-radius: 4px; font-size: .88em; }
+  a { color: #0b62d6; }
+  table { border-collapse: collapse; width: 100%; margin: .5rem 0 1rem; font-size: .93rem; }
+  th, td { border: 1px solid #e2e2e2; padding: .5rem .6rem; text-align: left; vertical-align: top; }
+  th { background: #f7f7f7; }
+  .callout { border-left: 4px solid #0b62d6; background: #f4f8ff; padding: .75rem 1rem; border-radius: 6px; margin: 1.25rem 0; }
+  footer { margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid #ececec; color: #777; font-size: .85rem; }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e6e6e6; background: #111; }
+    p, li { color: #d0d0d0; }
+    .meta, footer { color: #9a9a9a; }
+    code { background: #22262b; }
+    th, td { border-color: #2a2f36; }
+    th { background: #191d22; }
+    .callout { background: #12233d; border-left-color: #4a90e2; }
+    a { color: #6db3ff; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Privacy Policy</h1>
+  <p class="meta">JSON-LD &amp; Agent Inspector (Safari, Chrome and Firefox extension) · Last updated: 20 July 2026</p>
+
+  <div class="callout">
+    <strong>Privacy by design.</strong> The extension analyzes the current page locally
+    on your device and sends <strong>nothing</strong> to us or to any third-party server.
+    There are no analytics, no ads, and no tracking.
+  </div>
+
+  <h2>Who this applies to</h2>
+  <p>
+    This policy covers the browser extension “JSON-LD &amp; Agent Inspector” (also
+    published as “JSON-LD Tester”) for Safari, Google Chrome and Mozilla Firefox.
+    The developer is Gerhard Kanzler.
+  </p>
+
+  <h2>Data we collect</h2>
+  <p><strong>None.</strong> The developer does not collect, receive, store, sell or share
+     any personal data. No data ever leaves your device to us.</p>
+
+  <h2>What the extension processes locally</h2>
+  <p>All processing happens in memory, inside the extension, on your own device:</p>
+  <table>
+    <thead><tr><th>Data</th><th>When</th><th>Stored where</th><th>Removed when</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Structured data on the current page (JSON-LD, canonical, robots, page meta)</td>
+        <td>When you open the extension on a page</td>
+        <td>In-memory only (not persisted)</td>
+        <td>When you close the extension window</td>
+      </tr>
+      <tr>
+        <td>Agent-tool list &amp; schemas (WebMCP)</td>
+        <td>When you open the Agent Tools tab</td>
+        <td>In-memory only (not persisted)</td>
+        <td>When you close the extension window</td>
+      </tr>
+      <tr>
+        <td>Your settings (theme, language, default validator, header check, auto-update)</td>
+        <td>When you change a setting</td>
+        <td>Your browser’s local extension storage on your device</td>
+        <td>On uninstall or manual change</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Data that is never transmitted</h2>
+  <ul>
+    <li>Visited URLs</li>
+    <li>Page content or the structured data found on a page</li>
+    <li>Agent-tool schemas or any inputs you type into the tool tester</li>
+    <li>Browsing history (the extension has no access to it)</li>
+  </ul>
+
+  <h2>Network requests the extension makes</h2>
+  <p>
+    The extension makes <strong>no requests to the developer</strong> and <strong>no
+    third-party requests</strong>. The only network activity is optional and goes to the
+    website you are currently viewing (same-origin), never to us:
+  </p>
+  <ul>
+    <li><strong>Opening an external validator</strong> (Google Rich Results Test or the
+        Schema.org Validator): opens a new tab with the current page’s URL — a normal
+        navigation you click. Nothing is posted automatically.</li>
+    <li><strong>Reading HTTP response headers</strong>: one same-origin request from the
+        page to its own URL to show response headers and indexability. Can be turned off
+        in Settings.</li>
+    <li><strong>Checking agent/crawler files</strong> (only when you open the Readiness
+        tab): same-origin requests to the site’s own <code>/llms.txt</code>,
+        <code>/robots.txt</code>, <code>/sitemap.xml</code>, <code>/ai.txt</code> and
+        similar. Every request goes to the site itself; nothing is uploaded.</li>
+    <li><strong>Running an agent tool</strong>: only after your explicit, multi-step
+        confirmation, and it calls the current website’s own code — not the developer.</li>
+  </ul>
+
+  <h2>Permissions</h2>
+  <p>
+    The extension requests only the minimum permissions it needs
+    (<code>activeTab</code>, <code>scripting</code>, <code>storage</code>) and reads the
+    active page only on demand — there is no background content script running on the
+    pages you visit.
+  </p>
+
+  <h2>Children</h2>
+  <p>The extension is a developer/SEO tool and is not directed at children. It collects no data from anyone.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>If this policy changes, the updated version will be posted on this page with a new “Last updated” date.</p>
+
+  <h2>Contact</h2>
+  <p>
+    Questions about privacy? Please open an issue at
+    <a href="https://github.com/Gerhard-Kanzler/json-ld-tester/issues">the project’s GitHub issue tracker</a>.
+  </p>
+
+  <footer>
+    © 2026 Gerhard Kanzler. This page exists to document the extension’s privacy practices.
+    &nbsp;·&nbsp; <a href="support.html">Support</a>
+  </footer>
+</main>
+</body>
+</html>
