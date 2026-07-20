@@ -53,6 +53,11 @@
   .btn:hover{text-decoration:none;border-color:#2c3a4b}
   .btn.primary{background:var(--accent);color:#04120d;border-color:transparent}
   .btn.coffee{background:#ffdd00;color:#111;border-color:transparent}
+  .btn.store{background:#fff;color:#161616;border-color:transparent}
+  .chrome-mark{width:18px;height:18px;border-radius:50%;position:relative;flex:0 0 auto;
+    background:conic-gradient(from -30deg,#ea4335 0 33.33%,#fbbc05 0 66.66%,#34a853 0 100%)}
+  .chrome-mark::before{content:"";position:absolute;inset:2px;border-radius:50%;background:#fff}
+  .chrome-mark::after{content:"";position:absolute;inset:4.5px;border-radius:50%;background:#4285f4}
 
   /* terminal card */
   .term{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;
@@ -127,8 +132,8 @@
         <span class="badge">Web<b>MCP</b></span>
       </div>
       <div class="cta">
+        <a class="btn store" href="https://chromewebstore.google.com/detail/json-ld-tester/aohmciehgjboidolkmoaofcbnejmokan" target="_blank" rel="noopener"><span class="chrome-mark"></span><span data-i18n="ctaChrome">Add to Chrome — free</span></a>
         <a class="btn primary" href="#screens" data-i18n="ctaSee">See it in action</a>
-        <a class="btn" href="support.html" data-i18n="ctaSupport">Support</a>
         <a class="btn coffee" href="https://buymeacoffee.com/gk.appscreen" data-i18n="ctaCoffee">☕ Buy me a coffee</a>
       </div>
       <p class="fnote" style="margin-top:1.1rem;color:var(--muted)" data-i18n="avail">Available for Chrome, Firefox and Safari.</p>
@@ -174,6 +179,7 @@
   <div class="frow">
     <span class="mono" style="font-size:.82rem">© 2026 Gerhard Kanzler</span>
     <span>
+      <a href="https://chromewebstore.google.com/detail/json-ld-tester/aohmciehgjboidolkmoaofcbnejmokan" target="_blank" rel="noopener">Chrome Web Store</a> ·
       <a href="privacy.html" data-i18n="navPrivacy">Privacy</a> ·
       <a href="support.html" data-i18n="navSupport">Support</a> ·
       <a href="https://github.com/Gerhard-Kanzler/json-ld-tester">GitHub</a> ·
@@ -187,7 +193,7 @@ const I18N = {
   en:{navFeatures:"Features",navScreens:"Screenshots",navPrivacy:"Privacy",navSupport:"Support",
     heroH1:"Inspect the machine-readable web.",
     tagline:"Inspect, validate and test structured data & agent tools — on any website. Everything runs locally; nothing is uploaded.",
-    ctaSee:"See it in action",ctaSupport:"Support",ctaCoffee:"☕ Buy me a coffee",
+    ctaSee:"See it in action",ctaChrome:"Add to Chrome — free",ctaSupport:"Support",ctaCoffee:"☕ Buy me a coffee",
     avail:"Available for Chrome, Firefox and Safari.",
     featuresKick:"// what it does",featuresTitle:"Everything a technical SEO checks — in one panel",
     screensKick:"// screenshots",screensTitle:"Screenshots",screensSub:"The real extension UI, rendered in your language.",
@@ -195,7 +201,7 @@ const I18N = {
   de:{navFeatures:"Funktionen",navScreens:"Screenshots",navPrivacy:"Datenschutz",navSupport:"Support",
     heroH1:"Das maschinenlesbare Web inspizieren.",
     tagline:"Strukturierte Daten & Agent-Tools auf jeder Website prüfen, validieren und testen. Alles läuft lokal; nichts wird hochgeladen.",
-    ctaSee:"Live ansehen",ctaSupport:"Support",ctaCoffee:"☕ Spendier mir einen Kaffee",
+    ctaSee:"Live ansehen",ctaChrome:"Zu Chrome hinzufügen — kostenlos",ctaSupport:"Support",ctaCoffee:"☕ Spendier mir einen Kaffee",
     avail:"Verfügbar für Chrome, Firefox und Safari.",
     featuresKick:"// was es kann",featuresTitle:"Alles, was ein technischer SEO prüft — in einem Panel",
     screensKick:"// screenshots",screensTitle:"Screenshots",screensSub:"Die echte Erweiterungs-Oberfläche, in deiner Sprache gerendert.",
@@ -203,7 +209,7 @@ const I18N = {
   es:{navFeatures:"Funciones",navScreens:"Capturas",navPrivacy:"Privacidad",navSupport:"Soporte",
     heroH1:"Inspecciona la web legible por máquinas.",
     tagline:"Inspecciona, valida y prueba datos estructurados y herramientas de agente en cualquier web. Todo local; no se sube nada.",
-    ctaSee:"Verlo en acción",ctaSupport:"Soporte",ctaCoffee:"☕ Invítame a un café",
+    ctaSee:"Verlo en acción",ctaChrome:"Añadir a Chrome — gratis",ctaSupport:"Soporte",ctaCoffee:"☕ Invítame a un café",
     avail:"Disponible para Chrome, Firefox y Safari.",
     featuresKick:"// qué hace",featuresTitle:"Todo lo que revisa un SEO técnico — en un panel",
     screensKick:"// capturas",screensTitle:"Capturas",screensSub:"La interfaz real de la extensión, en tu idioma.",
@@ -211,7 +217,7 @@ const I18N = {
   it:{navFeatures:"Funzioni",navScreens:"Screenshot",navPrivacy:"Privacy",navSupport:"Supporto",
     heroH1:"Ispeziona il web leggibile dalle macchine.",
     tagline:"Ispeziona, valida e verifica dati strutturati e strumenti per agenti su qualsiasi sito. Tutto in locale; nulla viene caricato.",
-    ctaSee:"Guarda in azione",ctaSupport:"Supporto",ctaCoffee:"☕ Offrimi un caffè",
+    ctaSee:"Guarda in azione",ctaChrome:"Aggiungi a Chrome — gratis",ctaSupport:"Supporto",ctaCoffee:"☕ Offrimi un caffè",
     avail:"Disponibile per Chrome, Firefox e Safari.",
     featuresKick:"// cosa fa",featuresTitle:"Tutto ciò che controlla un SEO tecnico — in un pannello",
     screensKick:"// screenshot",screensTitle:"Screenshot",screensSub:"L'interfaccia reale dell'estensione, nella tua lingua.",
@@ -219,7 +225,7 @@ const I18N = {
   zh:{navFeatures:"功能",navScreens:"截图",navPrivacy:"隐私",navSupport:"支持",
     heroH1:"检查机器可读的网络。",
     tagline:"在任意网站上检查、校验并测试结构化数据与智能体工具。全部本地运行，不上传任何内容。",
-    ctaSee:"查看效果",ctaSupport:"支持",ctaCoffee:"☕ 请我喝杯咖啡",
+    ctaSee:"查看效果",ctaChrome:"添加到 Chrome — 免费",ctaSupport:"支持",ctaCoffee:"☕ 请我喝杯咖啡",
     avail:"支持 Chrome、Firefox 和 Safari。",
     featuresKick:"// 功能",featuresTitle:"技术 SEO 需要的一切检查——都在一个面板",
     screensKick:"// 截图",screensTitle:"截图",screensSub:"扩展的真实界面，按所选语言呈现。",
