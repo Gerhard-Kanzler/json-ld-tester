@@ -3,29 +3,289 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>JSON-LD &amp; Agent Inspector</title>
+<title>JSON-LD & Agent Inspector — structured data & agent tools</title>
+<meta name="description" content="Inspect, validate and test structured data (JSON-LD, Microdata, RDFa) and agent tools (WebMCP) on any website. On-page SEO, HTTP headers and an agent-readiness score. Local-only, no tracking.">
 <style>
-  :root { color-scheme: light dark; }
-  body {
-    margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    color: #1a1a1a; background: #fff; text-align: center; padding: 2rem;
+  :root{
+    --bg:#0b0f14; --panel:#11161d; --panel2:#0e1319; --line:#1e2733;
+    --fg:#d7deea; --muted:#8b97a7; --accent:#3ad3a6; --accent2:#7aa2ff;
+    --warn:#ffcf5c; --crit:#ff6b6b; --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   }
-  h1 { font-size: 1.6rem; margin: 0 0 .25rem; }
-  p { color: #666; margin: 0 0 1.5rem; }
-  a { display: inline-block; margin: .4rem; padding: .6rem 1.1rem; border-radius: 8px;
-      background: #0b62d6; color: #fff; text-decoration: none; font-weight: 600; }
-  a.coffee { background: #ffdd00; color: #000; }
-  @media (prefers-color-scheme: dark) { body { color: #e6e6e6; background: #111; } p { color: #9a9a9a; } }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--sans);
+    background-image:radial-gradient(circle at 12% -10%,rgba(58,211,166,.08),transparent 40%),radial-gradient(circle at 100% 0,rgba(122,162,255,.08),transparent 35%);}
+  a{color:var(--accent2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 1.25rem}
+  .mono{font-family:var(--mono)}
+
+  /* top bar */
+  header{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);
+    background:rgba(11,15,20,.72);border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;gap:1rem;height:60px}
+  .brand{font-family:var(--mono);font-weight:600;letter-spacing:.02em;color:var(--fg);white-space:nowrap}
+  .brand b{color:var(--accent)}
+  nav.links{display:flex;gap:1.1rem;margin-left:.5rem;flex:1;flex-wrap:wrap}
+  nav.links a{color:var(--muted);font-size:.92rem}
+  nav.links a:hover{color:var(--fg);text-decoration:none}
+  .langsw{display:flex;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:3px}
+  .langsw button{font-family:var(--mono);font-size:.75rem;letter-spacing:.04em;color:var(--muted);
+    background:transparent;border:0;padding:.28rem .5rem;border-radius:6px;cursor:pointer;text-transform:uppercase}
+  .langsw button[aria-pressed="true"]{background:var(--accent);color:#04120d;font-weight:700}
+  @media(max-width:720px){nav.links{display:none}}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:2.2rem;align-items:center;padding:3.4rem 0 2rem}
+  @media(max-width:860px){.hero{grid-template-columns:1fr;padding-top:2.4rem}}
+  .kick{font-family:var(--mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+  h1{font-size:2.5rem;line-height:1.08;margin:.5rem 0 .8rem;letter-spacing:-.01em}
+  @media(max-width:860px){h1{font-size:2rem}}
+  .lead{color:var(--muted);font-size:1.1rem;max-width:36ch}
+  .badges{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.4rem 0 .2rem}
+  .badge{font-family:var(--mono);font-size:.74rem;color:var(--fg);background:var(--panel);
+    border:1px solid var(--line);border-radius:999px;padding:.3rem .7rem}
+  .badge b{color:var(--accent)}
+  .cta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.6rem}
+  .btn{display:inline-flex;align-items:center;gap:.4rem;font-weight:600;font-size:.95rem;
+    padding:.62rem 1.05rem;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--fg)}
+  .btn:hover{text-decoration:none;border-color:#2c3a4b}
+  .btn.primary{background:var(--accent);color:#04120d;border-color:transparent}
+  .btn.coffee{background:#ffdd00;color:#111;border-color:transparent}
+
+  /* terminal card */
+  .term{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;
+    box-shadow:0 24px 60px -30px rgba(0,0,0,.8)}
+  .term .tt{display:flex;align-items:center;gap:.5rem;padding:.6rem .8rem;border-bottom:1px solid var(--line);background:var(--panel2)}
+  .dot{width:11px;height:11px;border-radius:50%}
+  .dot.r{background:#ff5f56}.dot.y{background:#ffbd2e}.dot.g{background:#27c93f}
+  .term .tf{margin-left:.5rem;font-family:var(--mono);font-size:.76rem;color:var(--muted)}
+  .term pre{margin:0;padding:1rem 1.1rem;font-family:var(--mono);font-size:.82rem;line-height:1.55;overflow-x:auto;color:#c8d3e0}
+  .term .k{color:var(--accent2)} .term .s{color:var(--accent)} .term .p{color:var(--muted)}
+  .term .status{display:flex;gap:1rem;padding:.55rem 1.1rem;border-top:1px solid var(--line);
+    font-family:var(--mono);font-size:.78rem;color:var(--muted);background:var(--panel2)}
+  .ok{color:var(--accent)} .er{color:var(--crit)}
+
+  /* sections */
+  section{padding:2.6rem 0}
+  .sec-h{font-family:var(--mono);font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+  h2{font-size:1.7rem;margin:.35rem 0 1.4rem;letter-spacing:-.01em}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+  @media(max-width:720px){.grid{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);
+    border-radius:12px;padding:1.25rem 1.3rem}
+  .card .ck{font-family:var(--mono);font-size:.76rem;color:var(--accent);letter-spacing:.03em}
+  .card h3{margin:.35rem 0 .45rem;font-size:1.12rem}
+  .card p{margin:0;color:var(--muted);font-size:.96rem}
+
+  /* screenshots */
+  .shots{display:flex;flex-direction:column;gap:1.6rem}
+  figure{margin:0}
+  .figcap{font-family:var(--mono);font-size:.78rem;color:var(--accent);margin:0 0 .5rem}
+  .figcap span{color:var(--muted)}
+  .shot-img{width:100%;height:auto;display:block;border:1px solid var(--line);border-radius:12px;
+    background:var(--panel);box-shadow:0 18px 50px -34px rgba(0,0,0,.9)}
+  .sub{color:var(--muted);margin:-.6rem 0 1.4rem}
+
+  footer{border-top:1px solid var(--line);padding:2rem 0 3rem;color:var(--muted)}
+  .fnote{font-family:var(--mono);font-size:.82rem}
+  .frow{display:flex;flex-wrap:wrap;gap:1.1rem;align-items:center;justify-content:space-between;margin-top:.6rem}
 </style>
 </head>
 <body>
-<main>
-  <h1>JSON-LD &amp; Agent Inspector</h1>
-  <p>Browser extension for structured data &amp; agent tools.</p>
-  <a href="privacy.html">Privacy Policy</a>
-  <a href="support.html">Support</a>
-  <a class="coffee" href="https://buymeacoffee.com/gk.appscreen">☕ Buy me a coffee</a>
+<header>
+  <div class="wrap bar">
+    <span class="brand">JSON-LD<b>·</b>Agent Inspector</span>
+    <nav class="links">
+      <a href="#features" data-i18n="navFeatures">Features</a>
+      <a href="#screens" data-i18n="navScreens">Screenshots</a>
+      <a href="privacy.html" data-i18n="navPrivacy">Privacy</a>
+      <a href="support.html" data-i18n="navSupport">Support</a>
+    </nav>
+    <div class="langsw" role="group" aria-label="Language">
+      <button data-lang="en">en</button>
+      <button data-lang="de">de</button>
+      <button data-lang="es">es</button>
+      <button data-lang="it">it</button>
+      <button data-lang="zh">zh</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="kick mono">structured data · agent tools</div>
+      <h1 data-i18n="heroH1">Inspect the machine-readable web.</h1>
+      <p class="lead" data-i18n="tagline">Inspect, validate and test structured data &amp; agent tools — on any website. Everything runs locally; nothing is uploaded.</p>
+      <div class="badges">
+        <span class="badge">Manifest <b>V3</b></span>
+        <span class="badge">vanilla <b>JS</b></span>
+        <span class="badge"><b>local</b>-only</span>
+        <span class="badge"><b>0</b> tracking</span>
+        <span class="badge">Web<b>MCP</b></span>
+      </div>
+      <div class="cta">
+        <a class="btn primary" href="#screens" data-i18n="ctaSee">See it in action</a>
+        <a class="btn" href="support.html" data-i18n="ctaSupport">Support</a>
+        <a class="btn coffee" href="https://buymeacoffee.com/gk.appscreen" data-i18n="ctaCoffee">☕ Buy me a coffee</a>
+      </div>
+      <p class="fnote" style="margin-top:1.1rem;color:var(--muted)" data-i18n="avail">Available for Chrome, Firefox and Safari.</p>
+    </div>
+    <div class="term" aria-hidden="true">
+      <div class="tt"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="tf">jsonld-inspector — active tab</span></div>
+<pre><span class="p">&lt;script type="application/ld+json"&gt;</span>
+{
+  <span class="k">"@context"</span>: <span class="s">"https://schema.org"</span>,
+  <span class="k">"@type"</span>: <span class="s">"Product"</span>,
+  <span class="k">"name"</span>: <span class="s">"Trail Runner GTX"</span>,
+  <span class="k">"offers"</span>: {
+    <span class="k">"@type"</span>: <span class="s">"Offer"</span>,
+    <span class="k">"price"</span>: <span class="s">"149.00"</span>,
+    <span class="k">"priceCurrency"</span>: <span class="s">"EUR"</span>
+  }
+}
+<span class="p">&lt;/script&gt;</span></pre>
+      <div class="status">
+        <span class="ok">✓ 3 blocks</span><span class="ok">✓ 0 errors</span>
+        <span class="er">1 warning</span><span>readiness <b class="ok">87</b>/100</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="sec-h" data-i18n="featuresKick">// what it does</div>
+    <h2 data-i18n="featuresTitle">Everything a technical SEO checks — in one panel</h2>
+    <div class="grid" id="feat-grid"></div>
+  </section>
+
+  <section id="screens">
+    <div class="sec-h" data-i18n="screensKick">// screenshots</div>
+    <h2 data-i18n="screensTitle">Screenshots</h2>
+    <p class="sub" data-i18n="screensSub">The real extension UI, rendered in your language.</p>
+    <div class="shots" id="shots"></div>
+  </section>
 </main>
+
+<footer class="wrap">
+  <div class="fnote" data-i18n="footNote">Free · privacy-friendly · no tracking</div>
+  <div class="frow">
+    <span class="mono" style="font-size:.82rem">© 2026 Gerhard Kanzler</span>
+    <span>
+      <a href="privacy.html" data-i18n="navPrivacy">Privacy</a> ·
+      <a href="support.html" data-i18n="navSupport">Support</a> ·
+      <a href="https://github.com/Gerhard-Kanzler/json-ld-tester">GitHub</a> ·
+      <a href="https://buymeacoffee.com/gk.appscreen">☕</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+const I18N = {
+  en:{navFeatures:"Features",navScreens:"Screenshots",navPrivacy:"Privacy",navSupport:"Support",
+    heroH1:"Inspect the machine-readable web.",
+    tagline:"Inspect, validate and test structured data & agent tools — on any website. Everything runs locally; nothing is uploaded.",
+    ctaSee:"See it in action",ctaSupport:"Support",ctaCoffee:"☕ Buy me a coffee",
+    avail:"Available for Chrome, Firefox and Safari.",
+    featuresKick:"// what it does",featuresTitle:"Everything a technical SEO checks — in one panel",
+    screensKick:"// screenshots",screensTitle:"Screenshots",screensSub:"The real extension UI, rendered in your language.",
+    footNote:"Free · privacy-friendly · no tracking"},
+  de:{navFeatures:"Funktionen",navScreens:"Screenshots",navPrivacy:"Datenschutz",navSupport:"Support",
+    heroH1:"Das maschinenlesbare Web inspizieren.",
+    tagline:"Strukturierte Daten & Agent-Tools auf jeder Website prüfen, validieren und testen. Alles läuft lokal; nichts wird hochgeladen.",
+    ctaSee:"Live ansehen",ctaSupport:"Support",ctaCoffee:"☕ Spendier mir einen Kaffee",
+    avail:"Verfügbar für Chrome, Firefox und Safari.",
+    featuresKick:"// was es kann",featuresTitle:"Alles, was ein technischer SEO prüft — in einem Panel",
+    screensKick:"// screenshots",screensTitle:"Screenshots",screensSub:"Die echte Erweiterungs-Oberfläche, in deiner Sprache gerendert.",
+    footNote:"Kostenlos · datenschutzfreundlich · kein Tracking"},
+  es:{navFeatures:"Funciones",navScreens:"Capturas",navPrivacy:"Privacidad",navSupport:"Soporte",
+    heroH1:"Inspecciona la web legible por máquinas.",
+    tagline:"Inspecciona, valida y prueba datos estructurados y herramientas de agente en cualquier web. Todo local; no se sube nada.",
+    ctaSee:"Verlo en acción",ctaSupport:"Soporte",ctaCoffee:"☕ Invítame a un café",
+    avail:"Disponible para Chrome, Firefox y Safari.",
+    featuresKick:"// qué hace",featuresTitle:"Todo lo que revisa un SEO técnico — en un panel",
+    screensKick:"// capturas",screensTitle:"Capturas",screensSub:"La interfaz real de la extensión, en tu idioma.",
+    footNote:"Gratis · respeta la privacidad · sin seguimiento"},
+  it:{navFeatures:"Funzioni",navScreens:"Screenshot",navPrivacy:"Privacy",navSupport:"Supporto",
+    heroH1:"Ispeziona il web leggibile dalle macchine.",
+    tagline:"Ispeziona, valida e verifica dati strutturati e strumenti per agenti su qualsiasi sito. Tutto in locale; nulla viene caricato.",
+    ctaSee:"Guarda in azione",ctaSupport:"Supporto",ctaCoffee:"☕ Offrimi un caffè",
+    avail:"Disponibile per Chrome, Firefox e Safari.",
+    featuresKick:"// cosa fa",featuresTitle:"Tutto ciò che controlla un SEO tecnico — in un pannello",
+    screensKick:"// screenshot",screensTitle:"Screenshot",screensSub:"L'interfaccia reale dell'estensione, nella tua lingua.",
+    footNote:"Gratis · rispetta la privacy · nessun tracciamento"},
+  zh:{navFeatures:"功能",navScreens:"截图",navPrivacy:"隐私",navSupport:"支持",
+    heroH1:"检查机器可读的网络。",
+    tagline:"在任意网站上检查、校验并测试结构化数据与智能体工具。全部本地运行，不上传任何内容。",
+    ctaSee:"查看效果",ctaSupport:"支持",ctaCoffee:"☕ 请我喝杯咖啡",
+    avail:"支持 Chrome、Firefox 和 Safari。",
+    featuresKick:"// 功能",featuresTitle:"技术 SEO 需要的一切检查——都在一个面板",
+    screensKick:"// 截图",screensTitle:"截图",screensSub:"扩展的真实界面，按所选语言呈现。",
+    footNote:"免费 · 注重隐私 · 无跟踪"},
+};
+const FEATURES = {
+  en:[["structured data","Structured data","Detect and validate every JSON-LD block (plus Microdata & RDFa), with per-block errors and schema.org links."],
+      ["on-page seo · headers","On-page SEO & headers","Meta tags, headings, Open Graph & Twitter, hreflang, images and links — plus HTTP headers and indexability."],
+      ["agent tools · webmcp","Agent tools","Inspect the WebMCP tools a page exposes and test them safely — destructive tools are gated behind confirmation."],
+      ["agent readiness","Agent readiness","A transparent, local 0–100 score with llms.txt, robots.txt, sitemap and ai.txt checks."]],
+  de:[["strukturierte daten","Strukturierte Daten","Erkenne und validiere jeden JSON-LD-Block (plus Microdata & RDFa) — mit Fehlern pro Block und schema.org-Links."],
+      ["on-page-seo · header","On-Page-SEO & Header","Meta-Tags, Überschriften, Open Graph & Twitter, hreflang, Bilder und Links — dazu HTTP-Header und Indexierbarkeit."],
+      ["agent-tools · webmcp","Agent-Tools","Prüfe die WebMCP-Tools einer Seite und teste sie sicher — destruktive Tools nur nach Bestätigung."],
+      ["agent-readiness","Agent-Readiness","Ein transparenter, lokaler Score von 0–100 mit Checks für llms.txt, robots.txt, Sitemap und ai.txt."]],
+  es:[["datos estructurados","Datos estructurados","Detecta y valida cada bloque JSON-LD (más Microdata y RDFa), con errores por bloque y enlaces a schema.org."],
+      ["seo on-page · cabeceras","SEO on-page y cabeceras","Meta etiquetas, encabezados, Open Graph y Twitter, hreflang, imágenes y enlaces — más cabeceras HTTP e indexabilidad."],
+      ["herramientas de agente · webmcp","Herramientas de agente","Inspecciona las herramientas WebMCP de una página y pruébalas con seguridad — las destructivas requieren confirmación."],
+      ["preparación para agentes","Preparación para agentes","Una puntuación local y transparente de 0 a 100 con comprobaciones de llms.txt, robots.txt, sitemap y ai.txt."]],
+  it:[["dati strutturati","Dati strutturati","Rileva e valida ogni blocco JSON-LD (più Microdata e RDFa), con errori per blocco e link a schema.org."],
+      ["seo on-page · header","SEO on-page e header","Meta tag, intestazioni, Open Graph e Twitter, hreflang, immagini e link — più header HTTP e indicizzabilità."],
+      ["strumenti per agenti · webmcp","Strumenti per agenti","Ispeziona gli strumenti WebMCP di una pagina e testali in sicurezza — quelli distruttivi richiedono conferma."],
+      ["idoneità agli agenti","Idoneità agli agenti","Un punteggio locale e trasparente da 0 a 100 con controlli di llms.txt, robots.txt, sitemap e ai.txt."]],
+  zh:[["结构化数据","结构化数据","检测并校验每个 JSON-LD 块（含 Microdata 与 RDFa），附每块错误提示和 schema.org 链接。"],
+      ["页面 seo · 响应头","页面 SEO 与响应头","Meta 标签、标题、Open Graph 与 Twitter、hreflang、图片和链接——外加 HTTP 响应头与可索引性。"],
+      ["智能体工具 · webmcp","智能体工具","检查页面公开的 WebMCP 工具并安全测试——破坏性工具需确认后执行。"],
+      ["智能体就绪度","智能体就绪度","透明的本地 0–100 评分，含 llms.txt、robots.txt、站点地图与 ai.txt 检查。"]],
+};
+// [kicker, headline] per shot (1..6), matching the localized screenshots.
+const SHOTS = {
+  en:[["Structured Data","Inspect JSON-LD in one click"],["Validation","Spot errors and warnings instantly"],["Agent Tools · WebMCP","See a website's agent tools"],["Safety first","Test agent tools safely"],["Agent Readiness","Improve your Agent Readiness Score"],["On-Page SEO","Audit on-page SEO at a glance"]],
+  de:[["Strukturierte Daten","JSON-LD mit einem Klick prüfen"],["Validierung","Fehler und Warnungen sofort erkennen"],["Agent-Tools · WebMCP","Die Agent-Tools einer Website sehen"],["Sicherheit zuerst","Agent-Tools sicher testen"],["Agent-Readiness","Deinen Agent-Readiness-Score verbessern"],["On-Page-SEO","On-Page-SEO auf einen Blick prüfen"]],
+  es:[["Datos estructurados","Inspecciona JSON-LD con un clic"],["Validación","Detecta errores y avisos al instante"],["Herramientas de agente · WebMCP","Descubre las herramientas de agente de un sitio"],["Seguridad primero","Prueba herramientas de agente con seguridad"],["Preparación para agentes","Mejora tu puntuación de preparación"],["SEO on-page","Audita el SEO on-page de un vistazo"]],
+  it:[["Dati strutturati","Ispeziona JSON-LD con un clic"],["Validazione","Individua errori e avvisi all'istante"],["Strumenti per agenti · WebMCP","Scopri gli strumenti per agenti di un sito"],["Sicurezza prima di tutto","Testa gli strumenti per agenti in sicurezza"],["Idoneità agli agenti","Migliora il tuo punteggio di idoneità"],["SEO on-page","Analizza il SEO on-page a colpo d'occhio"]],
+  zh:[["结构化数据","一键检查 JSON-LD"],["校验","即时发现错误和警告"],["智能体工具 · WebMCP","查看网站的智能体工具"],["安全优先","安全地测试智能体工具"],["智能体就绪度","提升你的智能体就绪度评分"],["页面 SEO","一览页面 SEO 状况"]],
+};
+const LANGS = ["en","de","es","it","zh"];
+
+function renderFeatures(l){
+  document.getElementById("feat-grid").innerHTML = FEATURES[l].map(([k,h,p])=>
+    `<div class="card"><div class="ck mono">${k}</div><h3>${h}</h3><p>${p}</p></div>`).join("");
+}
+function renderShots(l){
+  document.getElementById("shots").innerHTML = SHOTS[l].map(([k,h],i)=>
+    `<figure><figcaption class="figcap mono">${k} <span>— ${h}</span></figcaption>
+     <img class="shot-img" loading="lazy" width="1280" height="800"
+       src="assets/screenshot-${l}-${i+1}.png" alt="${k}: ${h}"></figure>`).join("");
+}
+function apply(l){
+  const t = I18N[l] || I18N.en;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const k = el.getAttribute("data-i18n"); if(t[k]!=null) el.textContent = t[k];
+  });
+  document.documentElement.lang = l;
+  renderFeatures(l); renderShots(l);
+  document.querySelectorAll(".langsw button").forEach(b=>
+    b.setAttribute("aria-pressed", b.dataset.lang===l ? "true":"false"));
+  try{ localStorage.setItem("jli_lang", l); }catch(e){}
+}
+function pick(){
+  let l; try{ l = localStorage.getItem("jli_lang"); }catch(e){}
+  if(!LANGS.includes(l)){ const n=(navigator.language||"en").slice(0,2); l = LANGS.includes(n)?n:"en"; }
+  return l;
+}
+document.querySelectorAll(".langsw button").forEach(b=>
+  b.addEventListener("click",()=>apply(b.dataset.lang)));
+apply(pick());
+</script>
 </body>
 </html>

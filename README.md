@@ -1,10 +1,12 @@
-# JSON-LD & Agent Inspector — Privacy & Support
+# JSON-LD & Agent Inspector — website, privacy & support
 
-This repository hosts **only** the two public pages required by the app stores for
-the browser extension *JSON-LD & Agent Inspector* (also published as *JSON-LD Tester*).
-It contains **no extension source code**.
+Public pages for the browser extension *JSON-LD & Agent Inspector* (also published
+as *JSON-LD Tester*). This repository contains **no extension source code** — only
+the landing page, privacy policy and support page, plus the localized screenshots.
 
-- **Privacy Policy** → [privacy.html](https://gerhard-kanzler.github.io/json-ld-tester/privacy.html)
-- **Support** → [support.html](https://gerhard-kanzler.github.io/json-ld-tester/support.html)
+- **Home** → https://gerhard-kanzler.github.io/json-ld-tester/
+- **Privacy Policy** → https://gerhard-kanzler.github.io/json-ld-tester/privacy.html
+- **Support** → https://gerhard-kanzler.github.io/json-ld-tester/support.html
 
-Pages are served via GitHub Pages from the `main` branch.
+The landing page has a language switcher (EN / DE / ES / IT / ZH) that swaps both
+the interface copy and the screenshots. Served via GitHub Pages from `main`.
